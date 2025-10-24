@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Cadastro de Aluno
+{% endblock %}
+
+{% block content %}
+{% block header %}
+{% include 'partials/header/header.html' %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2 class="h2 mt-4 mb-4">Cadastro aluno</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="nome_aluno" class="form-label">Nome do Aluno</label>
+            <input type="text" class="form-control" id="nome_aluno" name="nome_aluno"
+                placeholder="Insira o nome do aluno">
+        </div>
+        <div class="mb-3">
+            <label for="nascimento_aluno" class="form-label">Data de nascimento</label>
+            <input type="date" class="form-control" id="nascimento_aluno" name="nascimento_aluno">
+        </div>
+        <div class="mb-3">
+            <label for="cpf_aluno" class="form-label">CPF aluno</label>
+            <input type="text" class="form-control" id="cpf_aluno" name="cpf_aluno" maxlength="14"
+                placeholder="000.000.000-00" oninput="maskCPF(this)">
+        </div>
+        <div class="mb-3">
+            <label for="turma" class="form-label">Escolha a turma</label>
+            <select name="turma" id="turma" class="form-select">
+                <option value="" disabled selected>Escolha uma turma</option>
+                {% for turma in turmas %}
+                    <option value="{{ turma.id_turma }}">{{ turma.nome_turma }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="observacao_aluno" class="form-label">Observação</label>
+            <textarea name="observacao_aluno" class="form-control" id="observacao_aluno" rows="5" style="resize: none;"
+                placeholder="Insira uma observação ao aluno"></textarea>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-sm">Salvar aluno</button>
+            <a href="{% url 'aluno_list' %}" class="btn btn-danger btn-sm">Cancelar cadastro</a>
+        </div>
+    </form>
+</main>
+
+{% endblock %}
+{% block footer %}
+{% include 'partials/footer/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/maskCPF.js' %}"></script>
+{% endblock %}

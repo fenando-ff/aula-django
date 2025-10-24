@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_extra %}
+<!-- Aqui você pode adicionar CSS extra específico para esta página, se necessário -->
+{% endblock %}
+
+{% block content %}
+{% block header %}
+{% include 'partials/header/header.html' %}
+{% endblock %}
+
+<main class="container mt-4">
+  {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Data de Nascimento</th>
+        <th>CPF</th>
+        <th>Observações</th>
+        <th>Turma</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno in alunos %}
+      <tr>
+        <td>{{ aluno.id_aluno }}</td>
+        <td>{{ aluno.nome_aluno }}</td>
+        <td>{{ aluno.dataNasc_aluno }}</td>
+        <td>{{ aluno.cpf_aluno }}</td>
+        <td>{{ aluno.obs_aluno|truncatewords:10 }}</td>
+        <td>{{ aluno.id_turma.nome_turma }}</td>
+        <!-- Assumindo que id_turma é exibido; em produção, mostre o nome da turma -->
+        <td>
+          <a href="{% url 'aluno_update' aluno.id_aluno %}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="{% url 'aluno_delete' aluno.id_aluno %}" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">Nenhum aluno cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'aluno_create' %}" class="btn btn-success">Adicionar Aluno</a>
+</main>
+{% endblock %}
+{% block footer %}
+{% include 'partials/footer/footer.html' %}
+{% endblock %}
